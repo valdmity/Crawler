@@ -1,16 +1,16 @@
 import threading
 from queue import Queue
 from spider import Spider
-from domain import *
+from domains_handler import *
 from files_handler import *
 
 
 PROJECT_NAME = 'results'
-HOMEPAGE = 'https://ru.wikipedia.org/'
+HOMEPAGE = 'https://en.wikipedia.org/wiki/FC_Zenit_Saint_Petersburg'
 DOMAIN_NAME = get_domain_name(HOMEPAGE)
 QUEUE_FILE = PROJECT_NAME + '/queue.txt'
 CRAWLED_FILE = PROJECT_NAME + '/crawled.txt'
-NUMBER_OF_THREADS = 4
+NUMBER_OF_THREADS = 1
 
 queue = Queue()
 Spider(PROJECT_NAME, HOMEPAGE, DOMAIN_NAME)

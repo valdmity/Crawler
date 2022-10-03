@@ -7,9 +7,8 @@ def create_directory(directory: str):
 
 
 def write_file(path: str, data: str):
-    f = open(path, 'w')
-    f.write(data)
-    f.close()
+    with open(path, 'w') as f:
+        f.write(data)
 
 
 def create_data_files(project_name: str, base_url: str):
@@ -24,13 +23,12 @@ def create_data_files(project_name: str, base_url: str):
 
 
 def append_to_file(file_name: str, data: str):
-    with open(file_name, 'a') as f:
+    with open(file_name, 'a', encoding='utf-8') as f:
         f.write(data + '\n')
 
 
 def delete_file_contents(file_name: str):
-    with open(file_name, 'w') as f:
-        pass
+    open(file_name, 'w').close()
 
 
 def file_to_set(file_name: str) -> set[str]:
