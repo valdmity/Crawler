@@ -7,7 +7,7 @@ def create_directory(directory: str):
 
 
 def write_file(path: str, data: str):
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding='utf-8') as f:
         f.write(data)
 
 
@@ -33,7 +33,7 @@ def delete_file_contents(file_name: str):
 
 def file_to_set(file_name: str) -> set[str]:
     results = set()
-    with open(file_name, 'rt') as f:
+    with open(file_name, 'rt', encoding='utf-8') as f:
         for line in f:
             results.add(line.replace('\n', ''))
     return results
@@ -41,5 +41,5 @@ def file_to_set(file_name: str) -> set[str]:
 
 def set_to_file(links: set[str], file_name: str):
     delete_file_contents(file_name)
-    for link in sorted(links):
+    for link in links:
         append_to_file(file_name, link)
