@@ -1,5 +1,5 @@
 from urllib.request import urlopen
-from link_finder import LinkFinder
+from parser import Parser
 from files_handler import *
 import threading
 
@@ -32,8 +32,8 @@ class Spider:
         create_directory(Spider.pages_directory)
         create_data_files(Spider.project_name, Spider.base_url)
         with Spider.lock:
-            Spider.queue = file_to_set(Spider.queue_file)
-            Spider.crawled = file_to_set(Spider.crawled_file)
+            Spider.queue = convert_file_to_set(Spider.queue_file)
+            Spider.crawled = convert_file_to_set(Spider.crawled_file)
 
     @staticmethod
     def crawl_page(thread_name: str, page_url: str):
@@ -58,7 +58,7 @@ class Spider:
 
                 write_file(Spider.pages_directory + '/' + page_url.split('/')[-1], html_code)
             
-            finder = LinkFinder(Spider.base_url, page_url)
+            finder = Parser(Spider.base_url, page_url)
             finder.feed(html_code)
 
         except Exception as exception:
@@ -78,6 +78,6 @@ class Spider:
 
     @staticmethod
     def update_files():
-        set_to_file(Spider.queue, Spider.queue_file)
-        set_to_file(Spider.crawled, Spider.crawled_file)
+        convert_set_to_file(Spider.queue, Spider.queue_file)
+        convert_set_to_file(Spider.crawled, Spider.crawled_file)
     

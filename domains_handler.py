@@ -6,11 +6,13 @@ def get_domain_name(url: str) -> str:
         res = get_sub_domain_name(url).split('.')
         print('.'.join([res[-2], res[-1]]))
         return '.'.join([res[-2], res[-1]])
-    except:
+    except Exception as exception:
+        print(exception)
         return ''
 
 def get_sub_domain_name(url: str) -> str:
     try:
         return urlparse(url).netloc
-    except:
+    except Exception as exception:
+        print(exception)
         return ''

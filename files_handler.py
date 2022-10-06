@@ -31,7 +31,7 @@ def delete_file_contents(file_name: str):
     open(file_name, 'w').close()
 
 
-def file_to_set(file_name: str) -> set[str]:
+def convert_file_to_set(file_name: str) -> set[str]:
     results = set()
     with open(file_name, 'rt', encoding='utf-8') as f:
         for line in f:
@@ -39,7 +39,7 @@ def file_to_set(file_name: str) -> set[str]:
     return results
 
 
-def set_to_file(links: set[str], file_name: str):
+def convert_set_to_file(links: set[str], file_name: str):
     delete_file_contents(file_name)
     for link in links:
         append_to_file(file_name, link)

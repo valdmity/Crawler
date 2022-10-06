@@ -27,13 +27,13 @@ def work():
         queue.task_done()
 
 def create_jobs():
-    for link in file_to_set(QUEUE_FILE):
+    for link in convert_file_to_set(QUEUE_FILE):
         queue.put(link)
     queue.join()
     crawl()
 
 def crawl():
-    queued_links = file_to_set(QUEUE_FILE)
+    queued_links = convert_file_to_set(QUEUE_FILE)
     if len(queued_links) > 0:
         print(str(len(queued_links)) + ' links in the queue')
         create_jobs()

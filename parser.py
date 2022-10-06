@@ -2,7 +2,7 @@ from html.parser import HTMLParser
 from urllib import parse
 
 
-class LinkFinder(HTMLParser):
+class Parser(HTMLParser):
     
     def __init__(self, base_url: str, page_url: str):
         super().__init__()
@@ -11,7 +11,7 @@ class LinkFinder(HTMLParser):
         self.links = set()
     
     def error(self, message):
-        pass
+        print(message)
 
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
