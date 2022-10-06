@@ -23,11 +23,11 @@ class Spider:
         Spider.queue_file = Spider.project_name + '/queue.txt'
         Spider.crawled_file = Spider.project_name + '/crawled.txt'
         Spider.pages_directory = Spider.project_name + '/pages'
-        self.boot()
+        self.prepare()
         self.crawl_page('First spider', Spider.base_url)
 
     @staticmethod
-    def boot():
+    def prepare():
         create_directory(Spider.project_name)
         create_directory(Spider.pages_directory)
         create_data_files(Spider.project_name, Spider.base_url)
@@ -42,30 +42,41 @@ class Spider:
             print(' | '.join(['Queue: ' + str(len(Spider.queue)), 
             'Crawled: ' + str(len(Spider.crawled))]))
             with Spider.lock:
-                Spider.add_links_to_queue(Spider.gather_links(page_url))
+                Spider.parse_page(page_url)
                 Spider.queue.remove(page_url)
                 Spider.crawled.add(page_url)
                 Spider.update_files()
 
     @staticmethod
-    def gather_links(page_url: str) -> set[str]:
-        html_code = ''
+    def parse_page(page_url: str):
+        try:
+            html_code = Spider.get_html_code(page_url)
+            write_to_file(Spider.pages_directory + '/' + page_url.split('/')[-1], html_code)
+            links = Spider.gather_links(page_url, html_code)
+            Spider.add_links_to_queue(links)
+        except Exception as exception:
+            print(exception)
+
+
+    @staticmethod
+    def gather_links(page_url: str, html_code: str) -> set[str]:
+        try:
+            finder = Parser(Spider.base_url, page_url)
+            finder.feed(html_code)
+            return finder.page_links()
+        except:
+            raise
+
+    @staticmethod
+    def get_html_code(page_url: str) -> str:
         try:
             response = urlopen(page_url)
             if 'text/html' in response.getheader('Content-Type'):
                 html_bytes = response.read()
-                html_code = html_bytes.decode('utf-8', 'ignore')
-
-                write_file(Spider.pages_directory + '/' + page_url.split('/')[-1], html_code)
-            
-            finder = Parser(Spider.base_url, page_url)
-            finder.feed(html_code)
-
-        except Exception as exception:
-            print(exception)
-            return set()
-
-        return finder.page_links()
+                return html_bytes.decode('utf-8')
+            raise Exception('Page does not contain html code')
+        except:
+            raise
 
     @staticmethod
     def add_links_to_queue(links: set[str]):

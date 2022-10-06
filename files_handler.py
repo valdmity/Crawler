@@ -6,7 +6,7 @@ def create_directory(directory: str):
         os.makedirs(directory)
 
 
-def write_file(path: str, data: str):
+def write_to_file(path: str, data: str):
     with open(path, 'w', encoding='utf-8') as f:
         f.write(data)
 
@@ -15,14 +15,14 @@ def create_data_files(project_name: str, base_url: str):
     
     queue = project_name + '/queue.txt'
     if not os.path.isfile(queue):
-        write_file(queue, base_url)
+        write_to_file(queue, base_url)
     
     crawled = project_name + '/crawled.txt'
     if not os.path.isfile(crawled):
-        write_file(crawled, '')
+        write_to_file(crawled, '')
 
 
-def append_to_file(file_name: str, data: str):
+def add_line_to_file(file_name: str, data: str):
     with open(file_name, 'a', encoding='utf-8') as f:
         f.write(data + '\n')
 
@@ -42,4 +42,4 @@ def convert_file_to_set(file_name: str) -> set[str]:
 def convert_set_to_file(links: set[str], file_name: str):
     delete_file_contents(file_name)
     for link in links:
-        append_to_file(file_name, link)
+        add_line_to_file(file_name, link)
