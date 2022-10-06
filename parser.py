@@ -3,13 +3,13 @@ from urllib import parse
 
 
 class Parser(HTMLParser):
-    
+
     def __init__(self, base_url: str, page_url: str):
         super().__init__()
         self.base_url = base_url
         self.page_url = page_url
         self.links = set()
-    
+
     def error(self, message):
         print(message)
 

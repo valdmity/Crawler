@@ -14,11 +14,13 @@ NUMBER_OF_THREADS = 4
 queue = Queue()
 Spider(PROJECT_NAME, HOMEPAGE, DOMAIN_NAME)
 
+
 def create_workers():
     for _ in range(NUMBER_OF_THREADS):
         thread = threading.Thread(target=work)
         thread.daemon = True
         thread.start()
+
 
 def work():
     while True:
@@ -26,11 +28,13 @@ def work():
         Spider.crawl_page(threading.current_thread().name, url)
         queue.task_done()
 
+
 def create_jobs():
     for link in convert_file_to_set(QUEUE_FILE):
         queue.put(link)
     queue.join()
     crawl()
+
 
 def crawl():
     queued_links = convert_file_to_set(QUEUE_FILE)

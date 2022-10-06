@@ -40,7 +40,7 @@ class Spider:
         if page_url not in Spider.crawled:
             print(thread_name + ' is crawling ' + page_url)
             print(' | '.join(['Queue: ' + str(len(Spider.queue)), 
-            'Crawled: ' + str(len(Spider.crawled))]))
+                'Crawled: ' + str(len(Spider.crawled))]))
             with Spider.lock:
                 Spider.parse_page(page_url)
                 Spider.queue.remove(page_url)
@@ -51,12 +51,12 @@ class Spider:
     def parse_page(page_url: str):
         try:
             html_code = Spider.get_html_code(page_url)
-            write_to_file(Spider.pages_directory + '/' + page_url.split('/')[-1], html_code)
+            write_to_file(Spider.pages_directory + '/' + 
+                page_url.split('/')[-1], html_code)
             links = Spider.gather_links(page_url, html_code)
             Spider.add_links_to_queue(links)
         except Exception as exception:
             print(exception)
-
 
     @staticmethod
     def gather_links(page_url: str, html_code: str) -> set[str]:
@@ -64,8 +64,8 @@ class Spider:
             finder = Parser(Spider.base_url, page_url)
             finder.feed(html_code)
             return finder.page_links()
-        except:
-            raise
+        except Exception as exception:
+            raise exception
 
     @staticmethod
     def get_html_code(page_url: str) -> str:
@@ -75,8 +75,8 @@ class Spider:
                 html_bytes = response.read()
                 return html_bytes.decode('utf-8')
             raise Exception('Page does not contain html code')
-        except:
-            raise
+        except Exception as exception:
+            raise exception
 
     @staticmethod
     def add_links_to_queue(links: set[str]):
@@ -91,4 +91,4 @@ class Spider:
     def update_files():
         convert_set_to_file(Spider.queue, Spider.queue_file)
         convert_set_to_file(Spider.crawled, Spider.crawled_file)
-    
+   
