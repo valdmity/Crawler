@@ -7,12 +7,12 @@ from files_handler import *
 
 PROJECT_NAME = 'results'
 HOMEPAGE = 'https://en.wikipedia.org/wiki/FC_Zenit_Saint_Petersburg'
-DOMAIN_NAME = get_domain_name(HOMEPAGE)
+DOMAINS = [get_domain_name(HOMEPAGE)]
 QUEUE_FILE = PROJECT_NAME + '/queue.txt'
 NUMBER_OF_THREADS = 4
 
 queue = Queue()
-Spider(PROJECT_NAME, HOMEPAGE, DOMAIN_NAME)
+Spider(PROJECT_NAME, HOMEPAGE, DOMAINS)
 
 
 def create_workers():

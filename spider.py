@@ -8,7 +8,7 @@ class Spider:
 
     project_name = ''
     base_url = ''
-    domain_name = ''
+    domains = []
     queue_file = ''
     crawled_file = ''
     queue = set()
@@ -16,10 +16,10 @@ class Spider:
     lock = threading.Lock()
 
 
-    def __init__(self, project_name: str, base_url: str, domain_name: str):
+    def __init__(self, project_name: str, base_url: str, domain_name: list[str]):
         Spider.project_name = project_name
         Spider.base_url = base_url
-        Spider.domain_name = domain_name
+        Spider.domains = domain_name
         Spider.queue_file = Spider.project_name + '/queue.txt'
         Spider.crawled_file = Spider.project_name + '/crawled.txt'
         Spider.pages_directory = Spider.project_name + '/pages'
@@ -83,9 +83,8 @@ class Spider:
         for url in links:
             if url in Spider.queue or url in Spider.crawled:
                 continue
-            if Spider.domain_name not in url:
-                continue
-            Spider.queue.add(url)
+            if any([domain_name in url for domain_name in Spider.domains]):
+                Spider.queue.add(url)
 
     @staticmethod
     def update_files():
