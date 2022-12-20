@@ -1,4 +1,8 @@
 import os
+import threading
+
+
+lock = threading.Lock()
 
 
 def create_directory(directory: str):
@@ -7,8 +11,16 @@ def create_directory(directory: str):
 
 
 def write_to_file(path: str, data: str):
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(data)
+    with lock:
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(data)
+
+
+def write_to_file_in_binary_mode(path: str, data: bytes):
+    with lock:
+        with open(path, 'wb') as f:
+            f.write(data)
+
 
 
 def create_data_files(project_name: str, base_url: str):
@@ -23,20 +35,29 @@ def create_data_files(project_name: str, base_url: str):
 
 
 def add_line_to_file(file_name: str, data: str):
-    with open(file_name, 'a', encoding='utf-8') as f:
-        f.write(data + '\n')
+    with lock:
+        with open(file_name, 'a', encoding='utf-8') as f:
+            f.write(data + '\n')
+
+
+def read_from_file(path: str) -> str:
+    with lock:
+        with open(path, 'r', encoding='utf-8') as f:
+            return f.read()
 
 
 def delete_file_contents(file_name: str):
-    open(file_name, 'w').close()
+    with lock:
+        open(file_name, 'w').close()
 
 
 def convert_file_to_set(file_name: str) -> set[str]:
-    results = set()
-    with open(file_name, 'rt', encoding='utf-8') as f:
-        for line in f:
-            results.add(line.replace('\n', ''))
-    return results
+    with lock:
+        results = set()
+        with open(file_name, 'rt', encoding='utf-8') as f:
+            for line in f:
+                results.add(line.replace('\n', ''))
+        return results
 
 
 def convert_set_to_file(links: set[str], file_name: str):

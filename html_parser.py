@@ -18,7 +18,8 @@ class Parser(HTMLParser):
             for (attr, value) in attrs:
                 if attr == 'href':
                     url = parse.urljoin(self.base_url, value)
-                    self.links.add(url)
+                    if 'results/pages/' not in url:
+                        self.links.add(url.split('#')[0])
 
     def page_links(self) -> set[str]:
         return self.links
